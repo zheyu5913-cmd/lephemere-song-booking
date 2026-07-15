@@ -141,6 +141,11 @@ textarea{width:100%;min-height:110px;background:var(--ink-deep);border:1px solid
       <input type="text" id="bookSizeInput" placeholder="人數" style="width:70px;">
     </div>
     <div class="row" style="margin-top:8px;">
+      <select id="bookMaid" style="flex:1;min-width:160px;background:var(--ink-deep);border:1px solid var(--line);color:var(--parchment);border-radius:7px;padding:9px 11px;font-size:14px;font-family:inherit;">
+        <option value="">指名女僕（選填）</option>
+      </select>
+    </div>
+    <div class="row" style="margin-top:8px;">
       <input type="text" id="bookNote" placeholder="備註（選填）" style="flex:1;min-width:120px;">
     </div>
 
@@ -307,6 +312,7 @@ textarea{width:100%;min-height:110px;background:var(--ink-deep);border:1px solid
     staffRosterRef.on('value', function(snap){
       staffRoster = snap.val() || {};
       renderStaffCheckList();
+      renderMaidOptions();
     });
 
     todayStaffRef.on('value', function(snap){
@@ -332,6 +338,25 @@ textarea{width:100%;min-height:110px;background:var(--ink-deep);border:1px solid
   }
 
   // ---------- staff ----------
+  function renderMaidOptions(){
+    var sel = document.getElementById('bookMaid');
+    var current = sel.value;
+    var keys = Object.keys(staffRoster);
+    var excluded = ['店長','樂手'];
+    var maidKeys = keys.filter(function(k){
+      var role = (staffRoster[k].role || '').trim();
+      return excluded.indexOf(role) === -1;
+    });
+    var useKeys = maidKeys.length ? maidKeys : keys;
+    var html = '<option value="">指名女僕（選填）</option>';
+    useKeys.forEach(function(k){
+      var s = staffRoster[k];
+      html += '<option value="'+escapeHtml(s.name)+'">'+escapeHtml(s.name)+(s.role?'（'+escapeHtml(s.role)+'）':'')+'</option>';
+    });
+    sel.innerHTML = html;
+    if(useKeys.some(function(k){ return staffRoster[k].name === current; })) sel.value = current;
+  }
+
   function renderStaffCheckList(){
     var el = document.getElementById('staffCheckList');
     var keys = Object.keys(staffRoster);
@@ -470,6 +495,7 @@ textarea{width:100%;min-height:110px;background:var(--ink-deep);border:1px solid
     if(!isConfigured || !selectedDate) return;
     var name = document.getElementById('bookName').value.trim();
     var size = parseInt(document.getElementById('bookSizeInput').value, 10);
+    var maid = document.getElementById('bookMaid').value;
     var note = document.getElementById('bookNote').value.trim();
     var errEl = document.getElementById('bookingError');
     if(!name || !size || size < 1){
@@ -492,14 +518,16 @@ textarea{width:100%;min-height:110px;background:var(--ink-deep);border:1px solid
         date: selectedDate,
         name: name,
         size: size,
+        maid: maid,
         note: note,
         songs: selectedSongs,
         createdAt: Date.now()
       });
       var songLines = selectedSongs.length ? selectedSongs.map(function(s){ return '・'+s.title; }).join('\n') : '（未選歌曲）';
-      sendDiscordNotification('新的預約通知\n'+selectedDate+' ｜ '+name+' ｜ '+size+'位'+(note?' ｜ '+note:'')+'\n點歌：\n'+songLines);
+      sendDiscordNotification('新的預約通知\n'+selectedDate+' ｜ '+name+' ｜ '+size+'位'+(maid?' ｜ 指名：'+maid:'')+(note?' ｜ '+note:'')+'\n點歌：\n'+songLines);
       document.getElementById('bookName').value = '';
       document.getElementById('bookSizeInput').value = '';
+      document.getElementById('bookMaid').value = '';
       document.getElementById('bookNote').value = '';
       document.getElementById('bookingForm').style.display = 'none';
       errEl.style.display = 'none';
@@ -557,7 +585,7 @@ textarea{width:100%;min-height:110px;background:var(--ink-deep);border:1px solid
       var songs = (r.songs||[]).map(function(s){ return s.title; }).join('、') || '（未選歌曲）';
       html += '<div style="border-bottom:1px solid var(--line);padding-bottom:8px;">'
         + '<div style="display:flex;justify-content:space-between;align-items:center;">'
-        + '<span>'+r.date+' · '+escapeHtml(r.name)+' · '+r.size+'位'+(r.note?' · '+escapeHtml(r.note):'')+'</span>'
+        + '<span>'+r.date+' · '+escapeHtml(r.name)+' · '+r.size+'位'+(r.maid?' · 指名：'+escapeHtml(r.maid):'')+(r.note?' · '+escapeHtml(r.note):'')+'</span>'
         + '<button class="icon-btn" data-cancel="'+r.id+'" title="取消預約">✕</button>'
         + '</div>'
         + '<div style="font-size:11.5px;color:var(--parchment-dim);margin-top:3px;">點歌：'+escapeHtml(songs)+'</div>'
