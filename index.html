@@ -57,7 +57,6 @@ input:focus{outline:none;border-color:var(--gold-dim);}
 .btn.ghost{border-color:var(--line);color:var(--parchment-dim);}
 .btn.ghost:hover{color:var(--parchment);border-color:var(--parchment-dim);}
 .btn.small{padding:6px 12px;font-size:12px;}
-.btn:disabled{opacity:0.35;cursor:not-allowed;}
 
 .chip{
   display:inline-flex;align-items:center;gap:6px;background:var(--ink-deep);
@@ -65,8 +64,6 @@ input:focus{outline:none;border-color:var(--gold-dim);}
   cursor:pointer;margin:0 6px 6px 0;
 }
 .chip:hover{border-color:var(--gold-dim);color:var(--gold);}
-.chip.disabled{opacity:0.35;cursor:not-allowed;}
-.chip.full{opacity:0.3;cursor:not-allowed;}
 .chip .artist{color:var(--parchment-dim);font-size:11px;}
 
 .staff-chip{
@@ -88,17 +85,6 @@ input:focus{outline:none;border-color:var(--gold-dim);}
   margin:0 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line);
 }
 
-.list{position:relative;z-index:1;}
-.empty{text-align:center;padding:30px 10px;color:var(--parchment-dim);font-size:13px;}
-.card{
-  background:var(--card);border:1px solid var(--line);border-left:3px solid var(--rose-dim);
-  border-radius:8px;padding:11px 14px;margin-bottom:8px;
-}
-.card .row-top{display:flex;justify-content:space-between;align-items:center;gap:10px;}
-.card .title{font-size:14px;font-weight:500;}
-.card .sub{font-size:11.5px;color:var(--parchment-dim);margin-top:2px;}
-.card .songs{font-size:12px;color:var(--parchment-dim);margin-top:6px;padding-top:6px;border-top:1px solid var(--line);}
-.card .songs a{color:var(--gold);}
 .icon-btn{background:transparent;border:1px solid var(--line);color:var(--parchment-dim);width:30px;height:30px;border-radius:6px;cursor:pointer;font-size:13px;flex-shrink:0;}
 .icon-btn:hover{color:var(--parchment);border-color:var(--parchment-dim);}
 
@@ -158,11 +144,9 @@ textarea{width:100%;min-height:110px;background:var(--ink-deep);border:1px solid
       <input type="text" id="bookNote" placeholder="備註（選填）" style="flex:1;min-width:120px;">
     </div>
 
-    <p class="panel-title" style="margin-top:18px;">選擇歌曲（最多3首）</p>
-    <div id="bookingSetlistChips"><span style="color:var(--parchment-dim);font-size:12px;">曲目清單準備中...</span></div>
-
+    <p class="panel-title" style="margin-top:18px;">自由點歌（最多3首，需附原曲網址）</p>
     <div class="row" style="margin-top:10px;">
-      <input type="text" id="customSongTitle" placeholder="或自行輸入歌名" style="flex:1;min-width:120px;">
+      <input type="text" id="customSongTitle" placeholder="歌名" style="flex:1;min-width:120px;">
       <input type="text" id="customSongUrl" placeholder="原曲網址（必填）" style="flex:1;min-width:160px;">
       <button class="btn ghost small" id="addCustomSong">加入</button>
     </div>
@@ -218,15 +202,6 @@ textarea{width:100%;min-height:110px;background:var(--ink-deep);border:1px solid
     <button class="btn primary" id="updateTodayStaff">更新在班名單</button>
     <p style="font-size:11.5px;color:var(--parchment-dim);margin:8px 0 0;">這份名單會持續顯示給客人看，直到下次更新為止。日期欄位僅供你自己記錄。</p>
 
-    <p class="admin-section-label" style="margin-top:26px;">♪ 曲目清單管理</p>
-    <p class="panel-title">新增曲目（供客人預約時挑選）</p>
-    <div class="row">
-      <input type="text" id="newSongTitle" placeholder="歌名" style="flex:1;min-width:120px;">
-      <input type="text" id="newSongArtist" placeholder="演出者／備註（選填）" style="min-width:120px;">
-      <button class="btn primary" id="addSetlistSong">加入清單</button>
-    </div>
-    <div id="setlistManageList" style="margin-top:10px;"></div>
-
     <p class="admin-section-label" style="margin-top:26px;">🕯 預約管理</p>
     <p class="panel-title">開放可預約日期</p>
     <div class="row">
@@ -260,15 +235,14 @@ textarea{width:100%;min-height:110px;background:var(--ink-deep);border:1px solid
   var isConfigured = firebaseConfig.apiKey.indexOf('貼上') === -1;
   if(!isConfigured){ document.getElementById('configWarn').style.display = 'block'; }
 
-  var setlist = {};
   var openDates = {};
   var reservations = {};
   var staffRoster = {};
   var todayStaff = {};
   var webhookUrl = '';
   var selectedDate = null;
-  var selectedSongs = []; // [{title, url, source}]
-  var db, setlistRef, openDatesRef, reservationsRef, webhookRef, rulesRef, staffRosterRef, todayStaffRef;
+  var selectedSongs = []; // [{title, url}]
+  var db, openDatesRef, reservationsRef, webhookRef, rulesRef, staffRosterRef, todayStaffRef;
 
   function petals(){
     var wrap = document.getElementById('wrap');
@@ -305,7 +279,6 @@ textarea{width:100%;min-height:110px;background:var(--ink-deep);border:1px solid
   if(isConfigured){
     firebase.initializeApp(firebaseConfig);
     db = firebase.database();
-    setlistRef = db.ref('lephemere/setlist');
     openDatesRef = db.ref('lephemere/openDates');
     reservationsRef = db.ref('lephemere/reservations');
     webhookRef = db.ref('lephemere/webhookUrl');
@@ -343,12 +316,6 @@ textarea{width:100%;min-height:110px;background:var(--ink-deep);border:1px solid
       if(dateInput && !dateInput.value){
         dateInput.value = todayStaff.date || todayKey();
       }
-    });
-
-    setlistRef.on('value', function(snap){
-      setlist = snap.val() || {};
-      renderBookingSetlistChips();
-      renderSetlistManageList();
     });
 
     openDatesRef.on('value', function(snap){
@@ -421,73 +388,15 @@ textarea{width:100%;min-height:110px;background:var(--ink-deep);border:1px solid
     todayStaffRef.set({ date: dateInput || todayKey(), staffIds: ids });
   });
 
-  // ---------- setlist (used for song picking during booking) ----------
-  function renderBookingSetlistChips(){
-    var el = document.getElementById('bookingSetlistChips');
-    var keys = Object.keys(setlist);
-    if(keys.length===0){
-      el.innerHTML = '<span style="color:var(--parchment-dim);font-size:12px;">目前沒有預設曲目，可自行輸入</span>';
-      return;
-    }
-    var full = selectedSongs.length >= 3;
-    var html = '';
-    keys.forEach(function(k){
-      var s = setlist[k];
-      var already = selectedSongs.some(function(sel){ return sel.source==='setlist' && sel.key===k; });
-      var disabled = full || already;
-      html += '<span class="chip '+(disabled?'disabled':'')+'" data-key="'+k+'">'+escapeHtml(s.title)+(s.artist?' <span class="artist">· '+escapeHtml(s.artist)+'</span>':'')+'</span>';
-    });
-    el.innerHTML = html;
-    el.querySelectorAll('.chip:not(.disabled)').forEach(function(chip){
-      chip.addEventListener('click', function(){
-        var k = chip.getAttribute('data-key');
-        var s = setlist[k];
-        addSelectedSong({ title: s.title, url: '', source: 'setlist', key: k });
-      });
-    });
-  }
-
-  function renderSetlistManageList(){
-    var el = document.getElementById('setlistManageList');
-    var keys = Object.keys(setlist);
-    if(keys.length===0){ el.innerHTML = '<span style="color:var(--parchment-dim);font-size:12px;">尚無曲目</span>'; return; }
-    var html = '<div style="display:flex;flex-direction:column;gap:6px;">';
-    keys.forEach(function(k){
-      var s = setlist[k];
-      html += '<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:6px;">'
-        + '<span>'+escapeHtml(s.title)+(s.artist?' <span style="color:var(--parchment-dim);font-size:11px;">· '+escapeHtml(s.artist)+'</span>':'')+'</span>'
-        + '<button class="icon-btn" data-remove-song="'+k+'" title="刪除">✕</button>'
-        + '</div>';
-    });
-    html += '</div>';
-    el.innerHTML = html;
-    el.querySelectorAll('[data-remove-song]').forEach(function(btn){
-      btn.addEventListener('click', function(){ setlistRef.child(btn.getAttribute('data-remove-song')).remove(); });
-    });
-  }
-
-  document.getElementById('addSetlistSong').addEventListener('click', function(){
-    if(!isConfigured) return;
-    var title = document.getElementById('newSongTitle').value.trim();
-    var artist = document.getElementById('newSongArtist').value.trim();
-    if(!title) return;
-    var key = setlistRef.push().key;
-    setlistRef.child(key).set({ title: title, artist: artist });
-    document.getElementById('newSongTitle').value = '';
-    document.getElementById('newSongArtist').value = '';
-  });
-
   // ---------- song selection (max 3) ----------
   function addSelectedSong(song){
     if(selectedSongs.length >= 3) return;
     selectedSongs.push(song);
     renderSelectedSongs();
-    renderBookingSetlistChips();
   }
   function removeSelectedSong(index){
     selectedSongs.splice(index,1);
     renderSelectedSongs();
-    renderBookingSetlistChips();
   }
   function renderSelectedSongs(){
     var el = document.getElementById('selectedSongsList');
@@ -518,7 +427,7 @@ textarea{width:100%;min-height:110px;background:var(--ink-deep);border:1px solid
       return;
     }
     errEl.style.display = 'none';
-    addSelectedSong({ title: title, url: url, source: 'custom' });
+    addSelectedSong({ title: title, url: url });
     document.getElementById('customSongTitle').value = '';
     document.getElementById('customSongUrl').value = '';
   });
@@ -546,7 +455,6 @@ textarea{width:100%;min-height:110px;background:var(--ink-deep);border:1px solid
         document.getElementById('bookingForm').style.display = 'block';
         document.getElementById('bookingError').style.display = 'none';
         renderSelectedSongs();
-        renderBookingSetlistChips();
         document.getElementById('bookingForm').scrollIntoView({behavior:'smooth', block:'center'});
       });
     });
