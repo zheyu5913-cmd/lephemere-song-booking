@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>曇時 現場點歌</title>
+<title>曇時 咖啡廳預約</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600&family=Noto+Sans+TC:wght@400;500;700&display=swap');
 
@@ -57,48 +57,18 @@ input:focus{outline:none;border-color:var(--gold-dim);}
 .btn.ghost{border-color:var(--line);color:var(--parchment-dim);}
 .btn.ghost:hover{color:var(--parchment);border-color:var(--parchment-dim);}
 .btn.small{padding:6px 12px;font-size:12px;}
+.btn:disabled{opacity:0.35;cursor:not-allowed;}
 
-.song-chip{
+.chip{
   display:inline-flex;align-items:center;gap:6px;background:var(--ink-deep);
   border:1px solid var(--line);border-radius:20px;padding:7px 14px;font-size:13px;
   cursor:pointer;margin:0 6px 6px 0;
 }
-.song-chip:hover{border-color:var(--gold-dim);color:var(--gold);}
-.song-chip .artist{color:var(--parchment-dim);font-size:11px;}
+.chip:hover{border-color:var(--gold-dim);color:var(--gold);}
+.chip.disabled{opacity:0.35;cursor:not-allowed;}
+.chip.full{opacity:0.3;cursor:not-allowed;}
+.chip .artist{color:var(--parchment-dim);font-size:11px;}
 
-.setup-toggle{font-size:12px;color:var(--mist);cursor:pointer;display:flex;align-items:center;gap:6px;margin-bottom:14px;position:relative;z-index:1;}
-.setup-body{display:none;}
-.setup-body.open{display:block;}
-
-.list{position:relative;z-index:1;}
-.empty{text-align:center;padding:30px 10px;color:var(--parchment-dim);font-size:13px;}
-.card{
-  background:var(--card);border:1px solid var(--line);border-left:3px solid var(--rose-dim);
-  border-radius:8px;padding:11px 14px;margin-bottom:8px;
-  display:flex;justify-content:space-between;align-items:center;gap:10px;
-}
-.card.played{border-left-color:var(--sage-dim);opacity:0.5;}
-.meta p{margin:0;}
-.meta .title{font-size:14px;font-weight:500;}
-.meta .sub{font-size:11.5px;color:var(--parchment-dim);margin-top:2px;}
-.tag{font-size:10.5px;padding:2px 8px;border-radius:12px;border:1px solid var(--mist);color:var(--mist);}
-.status-pill{font-size:11px;padding:3px 9px;border-radius:20px;border:1px solid var(--rose-dim);color:var(--rose);white-space:nowrap;}
-.card.played .status-pill{border-color:var(--sage-dim);color:var(--sage);}
-.icon-btn{background:transparent;border:1px solid var(--line);color:var(--parchment-dim);width:30px;height:30px;border-radius:6px;cursor:pointer;font-size:13px;}
-.icon-btn:hover{color:var(--parchment);border-color:var(--parchment-dim);}
-.card-actions{display:flex;gap:6px;align-items:center;}
-
-.configwarn{position:relative;z-index:1;background:#3a2b2b;border:1px solid var(--rose-dim);color:var(--parchment);border-radius:8px;padding:12px 14px;margin-bottom:14px;font-size:13px;line-height:1.6;}
-
-.tab-btn{
-  flex:1;background:var(--card);border:1px solid var(--line);color:var(--parchment-dim);
-  border-radius:8px;padding:11px 10px;font-size:13px;font-family:inherit;cursor:pointer;
-}
-.tab-btn.active{background:var(--gold-dim);color:var(--ink-deep);border-color:var(--gold-dim);font-weight:600;}
-.admin-section-label{
-  font-family:'Noto Serif TC',serif;font-size:13px;color:var(--gold);
-  margin:0 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line);
-}
 .staff-chip{
   display:inline-flex;align-items:center;gap:6px;background:var(--ink-deep);
   border:1px solid var(--line);border-radius:20px;padding:6px 12px;font-size:12.5px;
@@ -109,6 +79,41 @@ input:focus{outline:none;border-color:var(--gold-dim);}
   border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-bottom:6px;
 }
 .staff-check label{flex:1;font-size:13px;cursor:pointer;}
+
+.setup-toggle{font-size:12px;color:var(--mist);cursor:pointer;display:flex;align-items:center;gap:6px;margin-bottom:14px;position:relative;z-index:1;}
+.setup-body{display:none;}
+.setup-body.open{display:block;}
+.admin-section-label{
+  font-family:'Noto Serif TC',serif;font-size:13px;color:var(--gold);
+  margin:0 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line);
+}
+
+.list{position:relative;z-index:1;}
+.empty{text-align:center;padding:30px 10px;color:var(--parchment-dim);font-size:13px;}
+.card{
+  background:var(--card);border:1px solid var(--line);border-left:3px solid var(--rose-dim);
+  border-radius:8px;padding:11px 14px;margin-bottom:8px;
+}
+.card .row-top{display:flex;justify-content:space-between;align-items:center;gap:10px;}
+.card .title{font-size:14px;font-weight:500;}
+.card .sub{font-size:11.5px;color:var(--parchment-dim);margin-top:2px;}
+.card .songs{font-size:12px;color:var(--parchment-dim);margin-top:6px;padding-top:6px;border-top:1px solid var(--line);}
+.card .songs a{color:var(--gold);}
+.icon-btn{background:transparent;border:1px solid var(--line);color:var(--parchment-dim);width:30px;height:30px;border-radius:6px;cursor:pointer;font-size:13px;flex-shrink:0;}
+.icon-btn:hover{color:var(--parchment);border-color:var(--parchment-dim);}
+
+.selected-song{
+  display:flex;justify-content:space-between;align-items:center;background:var(--ink-deep);
+  border:1px solid var(--gold-dim);border-radius:7px;padding:8px 12px;margin-bottom:6px;font-size:13px;
+}
+
+.configwarn{position:relative;z-index:1;background:#3a2b2b;border:1px solid var(--rose-dim);color:var(--parchment);border-radius:8px;padding:12px 14px;margin-bottom:14px;font-size:13px;line-height:1.6;}
+
+textarea{width:100%;min-height:110px;background:var(--ink-deep);border:1px solid var(--line);color:var(--parchment);border-radius:7px;padding:9px 11px;font-size:13px;font-family:inherit;resize:vertical;}
+
+@media (max-width:480px){
+  .brand{font-size:0.95rem;}
+}
 </style>
 </head>
 <body>
@@ -117,7 +122,7 @@ input:focus{outline:none;border-color:var(--gold-dim);}
   <div class="header">
     <div class="brand">
       <h1>曇時 Cafe l'Éphémère</h1>
-      <p>點歌 · 預約</p>
+      <p>咖啡廳預約</p>
     </div>
     <div class="clock">
       <div><span class="dot offline" id="connDot"></span><span id="connText">連線中...</span></div>
@@ -138,53 +143,37 @@ input:focus{outline:none;border-color:var(--gold-dim);}
     <div id="todayStaffContent" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
   </div>
 
-  <div class="tabbar" style="position:relative;z-index:1;display:flex;gap:8px;margin-bottom:16px;">
-    <button class="tab-btn active" id="tabBookingBtn" data-tab="booking">🕯 咖啡廳預約</button>
-    <button class="tab-btn" id="tabSongBtn" data-tab="song">♪ 現場點歌</button>
+  <div class="panel">
+    <p class="panel-title">可預約日期（一天僅接一組）</p>
+    <div id="dateList"><span style="color:var(--parchment-dim);font-size:12px;">目前沒有開放的預約日期</span></div>
   </div>
 
-  <div id="tabBooking" class="tab-pane">
-    <div class="panel">
-      <p class="panel-title">預約時段</p>
-      <div id="slotList"><span style="color:var(--parchment-dim);font-size:12px;">目前沒有開放的預約時段</span></div>
+  <div class="panel" id="bookingForm" style="display:none;">
+    <p class="panel-title">填寫預約資料 · <span id="selectedDateLabel"></span></p>
+    <div class="row">
+      <input type="text" id="bookName" placeholder="角色名／稱呼" style="flex:1;min-width:120px;">
+      <input type="text" id="bookSizeInput" placeholder="人數" style="width:70px;">
+    </div>
+    <div class="row" style="margin-top:8px;">
+      <input type="text" id="bookNote" placeholder="備註（選填）" style="flex:1;min-width:120px;">
     </div>
 
-    <div class="panel" id="bookingForm" style="display:none;">
-      <p class="panel-title">填寫預約資料</p>
-      <div class="row">
-        <input type="text" id="bookName" placeholder="角色名／稱呼" style="flex:1;min-width:120px;">
-        <input type="text" id="bookSizeInput" placeholder="人數" style="width:70px;">
-        <input type="text" id="bookNote" placeholder="備註（選填）" style="flex:1;min-width:120px;">
-      </div>
-      <div class="row" style="margin-top:8px;">
-        <button class="btn primary" id="submitBooking">確認預約</button>
-        <button class="btn ghost" id="cancelBookingForm">取消</button>
-      </div>
-      <p id="bookingError" style="font-size:12px;color:var(--rose);margin:8px 0 0;display:none;"></p>
-    </div>
-  </div>
+    <p class="panel-title" style="margin-top:18px;">選擇歌曲（最多3首）</p>
+    <div id="bookingSetlistChips"><span style="color:var(--parchment-dim);font-size:12px;">曲目清單準備中...</span></div>
 
-  <div id="tabSong" class="tab-pane" style="display:none;">
-    <div class="panel">
-      <p class="panel-title">曲目清單 · 點一下即可點歌</p>
-      <div id="setlistChips"><span style="color:var(--parchment-dim);font-size:12px;">曲目清單準備中...</span></div>
+    <div class="row" style="margin-top:10px;">
+      <input type="text" id="customSongTitle" placeholder="或自行輸入歌名" style="flex:1;min-width:120px;">
+      <input type="text" id="customSongUrl" placeholder="原曲網址（必填）" style="flex:1;min-width:160px;">
+      <button class="btn ghost small" id="addCustomSong">加入</button>
     </div>
 
-    <div class="panel">
-      <p class="panel-title">自由點歌</p>
-      <div class="row">
-        <input type="text" id="customSong" placeholder="想點的歌名" style="flex:1;min-width:140px;">
-        <input type="text" id="requesterName" placeholder="你的名字（選填）" style="min-width:120px;">
-      </div>
-      <div class="row" style="margin-top:8px;">
-        <input type="text" id="customSongUrl" placeholder="原曲網址（必填，例如YouTube連結）" style="flex:1;min-width:200px;">
-        <button class="btn primary" id="submitCustom">送出點歌</button>
-      </div>
-      <p id="customSongError" style="font-size:12px;color:var(--rose);margin:8px 0 0;display:none;">請貼上原曲網址（例如YouTube連結）才能送出喔</p>
-    </div>
+    <div id="selectedSongsList" style="margin-top:10px;"></div>
 
-    <p class="panel-title" style="position:relative;z-index:1;">目前點歌清單</p>
-    <div class="list" id="requestList"></div>
+    <div class="row" style="margin-top:14px;">
+      <button class="btn primary" id="submitBooking">確認預約</button>
+      <button class="btn ghost" id="cancelBookingForm">取消</button>
+    </div>
+    <p id="bookingError" style="font-size:12px;color:var(--rose);margin:8px 0 0;display:none;"></p>
   </div>
 
   <div style="position:relative;z-index:1;text-align:center;margin-top:24px;">
@@ -202,17 +191,17 @@ input:focus{outline:none;border-color:var(--gold-dim);}
   </div>
 
   <div class="setup-toggle" id="djToggle" style="display:none;">
-    <span>♪ 樂手／管理設定</span> <span id="djChevron">▾</span>
+    <span>♪ 管理設定</span> <span id="djChevron">▾</span>
     <button class="btn ghost small" id="adminLogoutBtn" style="margin-left:auto;">登出</button>
   </div>
   <div class="panel setup-body" id="djBody">
     <p class="admin-section-label">📋 店規／注意事項</p>
-    <textarea id="rulesEditor" placeholder="輸入店規或注意事項，例如：&#10;・候位超過10分鐘未到視同放棄&#10;・低消每人一杯飲品&#10;・點歌僅供參考，實際演奏依樂手安排" style="width:100%;min-height:110px;background:var(--ink-deep);border:1px solid var(--line);color:var(--parchment);border-radius:7px;padding:9px 11px;font-size:13px;font-family:inherit;resize:vertical;"></textarea>
+    <textarea id="rulesEditor" placeholder="輸入店規或注意事項"></textarea>
     <div class="row" style="margin-top:8px;">
       <button class="btn primary" id="saveRules">儲存店規</button>
       <button class="btn ghost" id="hideRules">目前不顯示</button>
     </div>
-    <p style="font-size:11.5px;color:var(--parchment-dim);margin:8px 0 0;">儲存後會立刻顯示在頁面最上方，兩個分頁都看得到。留空並儲存則不會顯示這個區塊。</p>
+    <p style="font-size:11.5px;color:var(--parchment-dim);margin:8px 0 0;">儲存後立刻顯示在頁面最上方。留空並儲存則不顯示這個區塊。</p>
 
     <p class="admin-section-label" style="margin-top:26px;">👥 店員名單／在班設定</p>
     <p class="panel-title">新增店員到名單</p>
@@ -227,27 +216,24 @@ input:focus{outline:none;border-color:var(--gold-dim);}
       <input type="text" id="onDutyDate" placeholder="日期 YYYY-MM-DD" style="min-width:130px;">
     </div>
     <button class="btn primary" id="updateTodayStaff">更新在班名單</button>
-    <p style="font-size:11.5px;color:var(--parchment-dim);margin:8px 0 0;">這份名單會持續顯示給客人看，直到你下次更新為止（不會因為日期不同而自動隱藏）。日期欄位只是方便你自己記錄，記得每天營業前更新一次，確保客人看到的是當天正確的在班名單。</p>
+    <p style="font-size:11.5px;color:var(--parchment-dim);margin:8px 0 0;">這份名單會持續顯示給客人看，直到下次更新為止。日期欄位僅供你自己記錄。</p>
 
-    <p class="admin-section-label" style="margin-top:26px;">♪ 點歌管理</p>
-    <p class="panel-title">新增曲目到清單</p>
+    <p class="admin-section-label" style="margin-top:26px;">♪ 曲目清單管理</p>
+    <p class="panel-title">新增曲目（供客人預約時挑選）</p>
     <div class="row">
       <input type="text" id="newSongTitle" placeholder="歌名" style="flex:1;min-width:120px;">
       <input type="text" id="newSongArtist" placeholder="演出者／備註（選填）" style="min-width:120px;">
       <button class="btn primary" id="addSetlistSong">加入清單</button>
     </div>
-    <p class="panel-title" style="margin-top:16px;">清空已點歌曲</p>
-    <button class="btn ghost" id="clearRequests">清空點歌紀錄</button>
+    <div id="setlistManageList" style="margin-top:10px;"></div>
 
     <p class="admin-section-label" style="margin-top:26px;">🕯 預約管理</p>
-    <p class="panel-title">新增預約時段</p>
+    <p class="panel-title">開放可預約日期</p>
     <div class="row">
-      <input type="text" id="slotDate" placeholder="日期 YYYY-MM-DD" style="min-width:130px;">
-      <input type="text" id="slotTime" placeholder="時間 HH:MM" style="min-width:90px;">
-      <input type="text" id="slotCapacity" placeholder="上限人數" style="width:80px;">
-      <button class="btn primary" id="addSlot">新增時段</button>
+      <input type="text" id="newOpenDate" placeholder="日期 YYYY-MM-DD" style="min-width:140px;">
+      <button class="btn primary" id="addOpenDate">開放此日期</button>
     </div>
-    <p style="font-size:11.5px;color:var(--parchment-dim);margin:8px 0 0;">日期格式例如 2026-07-20，時間例如 19:00</p>
+    <div id="openDateManageList" style="margin-top:10px;"></div>
 
     <p class="panel-title" style="margin-top:16px;">目前預約總覽</p>
     <div id="adminReservationList" style="font-size:12.5px;">尚無預約</div>
@@ -275,24 +261,14 @@ input:focus{outline:none;border-color:var(--gold-dim);}
   if(!isConfigured){ document.getElementById('configWarn').style.display = 'block'; }
 
   var setlist = {};
-  var requests = {};
-  var slots = {};
+  var openDates = {};
   var reservations = {};
-  var webhookUrl = '';
-  var selectedSlotId = null;
   var staffRoster = {};
   var todayStaff = {};
-  var db, setlistRef, requestsRef, slotsRef, reservationsRef, webhookRef, rulesRef, staffRosterRef, todayStaffRef;
-
-  document.querySelectorAll('.tab-btn').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
-      btn.classList.add('active');
-      var tab = btn.getAttribute('data-tab');
-      document.getElementById('tabSong').style.display = tab==='song' ? 'block' : 'none';
-      document.getElementById('tabBooking').style.display = tab==='booking' ? 'block' : 'none';
-    });
-  });
+  var webhookUrl = '';
+  var selectedDate = null;
+  var selectedSongs = []; // [{title, url, source}]
+  var db, setlistRef, openDatesRef, reservationsRef, webhookRef, rulesRef, staffRosterRef, todayStaffRef;
 
   function petals(){
     var wrap = document.getElementById('wrap');
@@ -313,40 +289,12 @@ input:focus{outline:none;border-color:var(--gold-dim);}
   }
   tickClock();
   setInterval(tickClock,15000);
-  setInterval(renderRequests,30000);
 
   function escapeHtml(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
-  function waitedMinutes(ts){return Math.max(0, Math.round((Date.now()-ts)/60000));}
   function todayKey(){
     var d = new Date();
     return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
   }
-
-  function renderStaffCheckList(){
-    var el = document.getElementById('staffCheckList');
-    var keys = Object.keys(staffRoster);
-    if(keys.length===0){
-      el.innerHTML = '尚未建立店員名單';
-      return;
-    }
-    var currentOnDuty = todayStaff.staffIds || [];
-    var html = '';
-    keys.forEach(function(k){
-      var s = staffRoster[k];
-      var checked = currentOnDuty.indexOf(k) > -1 ? 'checked' : '';
-      html += '<div class="staff-check"><input type="checkbox" data-staff-id="'+k+'" '+checked+'>'
-        + '<label>'+escapeHtml(s.name)+' <span style="color:var(--parchment-dim);font-size:11px;">· '+escapeHtml(s.role||'')+'</span></label>'
-        + '<button class="icon-btn" data-remove-staff="'+k+'" title="從名單刪除">✕</button>'
-        + '</div>';
-    });
-    el.innerHTML = html;
-    el.querySelectorAll('[data-remove-staff]').forEach(function(btn){
-      btn.addEventListener('click', function(){
-        staffRosterRef.child(btn.getAttribute('data-remove-staff')).remove();
-      });
-    });
-  }
-
   function formatDateLabel(dateStr){
     if(!dateStr) return '';
     var parts = dateStr.split('-');
@@ -354,40 +302,20 @@ input:focus{outline:none;border-color:var(--gold-dim);}
     return parts[1].replace(/^0/,'') + '/' + parts[2].replace(/^0/,'');
   }
 
-  function renderTodayStaff(){
-    var panel = document.getElementById('todayStaffPanel');
-    var el = document.getElementById('todayStaffContent');
-    var titleEl = document.getElementById('todayStaffTitle');
-    if(!todayStaff.staffIds || todayStaff.staffIds.length===0){
-      panel.style.display = 'none';
-      return;
-    }
-    var html = '';
-    todayStaff.staffIds.forEach(function(id){
-      var s = staffRoster[id];
-      if(!s) return;
-      html += '<span class="staff-chip">'+escapeHtml(s.name)+(s.role?' <span class="role">'+escapeHtml(s.role)+'</span>':'')+'</span>';
-    });
-    if(!html){
-      panel.style.display = 'none';
-      return;
-    }
-    titleEl.textContent = formatDateLabel(todayStaff.date) + ' 在班店員';
-    el.innerHTML = html;
-    panel.style.display = 'block';
-  }
-
   if(isConfigured){
     firebase.initializeApp(firebaseConfig);
     db = firebase.database();
     setlistRef = db.ref('lephemere/setlist');
-    requestsRef = db.ref('lephemere/songRequests');
-    slotsRef = db.ref('lephemere/slots');
+    openDatesRef = db.ref('lephemere/openDates');
     reservationsRef = db.ref('lephemere/reservations');
     webhookRef = db.ref('lephemere/webhookUrl');
     rulesRef = db.ref('lephemere/rules');
     staffRosterRef = db.ref('lephemere/staffRoster');
     todayStaffRef = db.ref('lephemere/todayStaff');
+
+    db.ref('.info/connected').on('value', function(snap){
+      document.getElementById('connDot').className = snap.val()===true ? 'dot online' : 'dot offline';
+    });
 
     webhookRef.on('value', function(snap){ webhookUrl = snap.val() || ''; });
 
@@ -417,260 +345,62 @@ input:focus{outline:none;border-color:var(--gold-dim);}
       }
     });
 
-    db.ref('.info/connected').on('value', function(snap){
-      document.getElementById('connDot').className = snap.val()===true ? 'dot online' : 'dot offline';
-    });
-
     setlistRef.on('value', function(snap){
       setlist = snap.val() || {};
-      renderSetlist();
+      renderBookingSetlistChips();
+      renderSetlistManageList();
     });
-    requestsRef.on('value', function(snap){
-      requests = snap.val() || {};
-      renderRequests();
+
+    openDatesRef.on('value', function(snap){
+      openDates = snap.val() || {};
+      renderDateList();
+      renderOpenDateManageList();
     });
-    slotsRef.on('value', function(snap){
-      slots = snap.val() || {};
-      renderSlots();
-      renderAdminReservations();
-    });
+
     reservationsRef.on('value', function(snap){
       reservations = snap.val() || {};
-      renderSlots();
+      renderDateList();
       renderAdminReservations();
     });
   }
 
-  function renderSetlist(){
-    var el = document.getElementById('setlistChips');
-    var keys = Object.keys(setlist);
-    if(keys.length===0){
-      el.innerHTML = '<span style="color:var(--parchment-dim);font-size:12px;">目前沒有預設曲目，可自由點歌</span>';
-      return;
-    }
+  // ---------- staff ----------
+  function renderStaffCheckList(){
+    var el = document.getElementById('staffCheckList');
+    var keys = Object.keys(staffRoster);
+    if(keys.length===0){ el.innerHTML = '尚未建立店員名單'; return; }
+    var currentOnDuty = todayStaff.staffIds || [];
     var html = '';
     keys.forEach(function(k){
-      var s = setlist[k];
-      html += '<span class="song-chip" data-key="'+k+'">'+escapeHtml(s.title)+(s.artist?' <span class="artist">· '+escapeHtml(s.artist)+'</span>':'')+'</span>';
-    });
-    el.innerHTML = html;
-    el.querySelectorAll('.song-chip').forEach(function(chip){
-      chip.addEventListener('click', function(){
-        var k = chip.getAttribute('data-key');
-        var s = setlist[k];
-        addRequest(s.title, '', 'setlist');
-      });
-    });
-  }
-
-  function renderRequests(){
-    var el = document.getElementById('requestList');
-    var arr = Object.keys(requests).map(function(id){ var r=requests[id]; r.id=id; return r; });
-    if(arr.length===0){
-      el.innerHTML = '<div class="empty">目前還沒有人點歌，第一首交給你了</div>';
-      return;
-    }
-    arr.sort(function(a,b){ return a.createdAt - b.createdAt; });
-    var html='';
-    arr.forEach(function(r){
-      html += '<div class="card '+(r.status==='played'?'played':'')+'" data-id="'+r.id+'">'
-        + '<div class="meta">'
-        + '<p class="title">'+escapeHtml(r.title)+(r.source==='setlist'?' <span class="tag">清單</span>':' <span class="tag">自由點歌</span>')+'</p>'
-        + '<p class="sub">'+(r.requester? escapeHtml(r.requester)+' 點歌 · ':'')+waitedMinutes(r.createdAt)+' 分鐘前'+(r.sourceUrl? ' · <a href="'+escapeHtml(r.sourceUrl)+'" target="_blank" rel="noopener" style="color:var(--gold);">原曲連結</a>':'')+'</p>'
-        + '</div>'
-        + '<div class="card-actions">'
-        + '<span class="status-pill">'+(r.status==='played'?'已演奏':'待演奏')+'</span>'
-        + (r.status!=='played' ? '<button class="icon-btn" data-action="played" title="標記已演奏">✓</button>' : '')
-        + '<button class="icon-btn" data-action="remove" title="刪除">✕</button>'
-        + '</div>'
+      var s = staffRoster[k];
+      var checked = currentOnDuty.indexOf(k) > -1 ? 'checked' : '';
+      html += '<div class="staff-check"><input type="checkbox" data-staff-id="'+k+'" '+checked+'>'
+        + '<label>'+escapeHtml(s.name)+' <span style="color:var(--parchment-dim);font-size:11px;">· '+escapeHtml(s.role||'')+'</span></label>'
+        + '<button class="icon-btn" data-remove-staff="'+k+'" title="從名單刪除">✕</button>'
         + '</div>';
     });
     el.innerHTML = html;
-    el.querySelectorAll('[data-action]').forEach(function(btn){
-      btn.addEventListener('click', function(){
-        var id = btn.closest('.card').getAttribute('data-id');
-        var action = btn.getAttribute('data-action');
-        if(action==='played') requestsRef.child(id).update({status:'played'});
-        if(action==='remove') requestsRef.child(id).remove();
-      });
+    el.querySelectorAll('[data-remove-staff]').forEach(function(btn){
+      btn.addEventListener('click', function(){ staffRosterRef.child(btn.getAttribute('data-remove-staff')).remove(); });
     });
   }
 
-  function addRequest(title, requester, source, sourceUrl){
-    if(!isConfigured || !title.trim()) return;
-    var id = requestsRef.push().key;
-    requestsRef.child(id).set({
-      title: title.trim(),
-      requester: (requester||'').trim(),
-      source: source,
-      sourceUrl: (sourceUrl||'').trim(),
-      status: 'pending',
-      createdAt: Date.now()
-    });
-  }
-
-  function bookedCount(slotId){
-    var n = 0;
-    Object.keys(reservations).forEach(function(id){
-      if(reservations[id].slotId === slotId) n++;
-    });
-    return n;
-  }
-
-  function renderSlots(){
-    var el = document.getElementById('slotList');
-    var keys = Object.keys(slots);
-    if(keys.length===0){
-      el.innerHTML = '<span style="color:var(--parchment-dim);font-size:12px;">目前沒有開放的預約時段</span>';
-      return;
-    }
-    var byDate = {};
-    keys.forEach(function(k){
-      var s = slots[k];
-      if(!byDate[s.date]) byDate[s.date] = [];
-      byDate[s.date].push(Object.assign({id:k}, s));
-    });
-    var dates = Object.keys(byDate).sort();
+  function renderTodayStaff(){
+    var panel = document.getElementById('todayStaffPanel');
+    var el = document.getElementById('todayStaffContent');
+    var titleEl = document.getElementById('todayStaffTitle');
+    if(!todayStaff.staffIds || todayStaff.staffIds.length===0){ panel.style.display = 'none'; return; }
     var html = '';
-    dates.forEach(function(date){
-      html += '<p style="font-size:12.5px;color:var(--mist);margin:10px 0 6px;">'+date+'</p><div>';
-      byDate[date].sort(function(a,b){return a.time.localeCompare(b.time);}).forEach(function(s){
-        var booked = bookedCount(s.id);
-        var full = booked >= s.capacity;
-        html += '<span class="song-chip'+(full?'':'')+'" data-slot="'+s.id+'" style="'+(full?'opacity:0.4;cursor:not-allowed;':'')+'">'
-          + s.time+' <span class="artist">· '+booked+'/'+s.capacity+(full?' 已額滿':'')+'</span></span>';
-      });
-      html += '</div>';
+    todayStaff.staffIds.forEach(function(id){
+      var s = staffRoster[id];
+      if(!s) return;
+      html += '<span class="staff-chip">'+escapeHtml(s.name)+(s.role?' <span class="role">'+escapeHtml(s.role)+'</span>':'')+'</span>';
     });
+    if(!html){ panel.style.display = 'none'; return; }
+    titleEl.textContent = formatDateLabel(todayStaff.date) + ' 在班店員';
     el.innerHTML = html;
-    el.querySelectorAll('.song-chip').forEach(function(chip){
-      chip.addEventListener('click', function(){
-        var slotId = chip.getAttribute('data-slot');
-        var s = slots[slotId];
-        if(bookedCount(slotId) >= s.capacity) return;
-        selectedSlotId = slotId;
-        document.getElementById('bookingForm').style.display = 'block';
-        document.getElementById('bookingError').style.display = 'none';
-        document.getElementById('bookingForm').scrollIntoView({behavior:'smooth', block:'center'});
-      });
-    });
+    panel.style.display = 'block';
   }
-
-  function renderAdminReservations(){
-    var el = document.getElementById('adminReservationList');
-    if(!el) return;
-    var keys = Object.keys(reservations);
-    if(keys.length===0){
-      el.innerHTML = '尚無預約';
-      return;
-    }
-    var arr = keys.map(function(id){ var r=reservations[id]; r.id=id; return r; });
-    arr.sort(function(a,b){ return a.createdAt - b.createdAt; });
-    var html = '<div style="display:flex;flex-direction:column;gap:6px;">';
-    arr.forEach(function(r){
-      var s = slots[r.slotId];
-      var label = s ? (s.date+' '+s.time) : '（時段已刪除）';
-      html += '<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:6px;">'
-        + '<span>'+label+' · '+escapeHtml(r.name)+' · '+r.size+'位'+(r.note?' · '+escapeHtml(r.note):'')+'</span>'
-        + '<button class="icon-btn" data-cancel="'+r.id+'" title="取消預約">✕</button>'
-        + '</div>';
-    });
-    html += '</div>';
-    el.innerHTML = html;
-    el.querySelectorAll('[data-cancel]').forEach(function(btn){
-      btn.addEventListener('click', function(){
-        var id = btn.getAttribute('data-cancel');
-        reservationsRef.child(id).remove();
-      });
-    });
-  }
-
-  function sendDiscordNotification(text){
-    if(!webhookUrl) return;
-    fetch(webhookUrl, {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({content: text})
-    }).catch(function(){});
-  }
-
-  document.getElementById('submitCustom').addEventListener('click', function(){
-    var title = document.getElementById('customSong').value;
-    var name = document.getElementById('requesterName').value;
-    var url = document.getElementById('customSongUrl').value.trim();
-    var errEl = document.getElementById('customSongError');
-    if(!title.trim() || !url){
-      errEl.style.display = 'block';
-      return;
-    }
-    errEl.style.display = 'none';
-    addRequest(title, name, 'custom', url);
-    document.getElementById('customSong').value = '';
-    document.getElementById('requesterName').value = '';
-    document.getElementById('customSongUrl').value = '';
-  });
-
-  document.getElementById('cancelBookingForm').addEventListener('click', function(){
-    document.getElementById('bookingForm').style.display = 'none';
-    selectedSlotId = null;
-  });
-
-  document.getElementById('submitBooking').addEventListener('click', function(){
-    if(!isConfigured || !selectedSlotId) return;
-    var name = document.getElementById('bookName').value.trim();
-    var size = parseInt(document.getElementById('bookSizeInput').value, 10);
-    var note = document.getElementById('bookNote').value.trim();
-    var errEl = document.getElementById('bookingError');
-    if(!name || !size || size < 1){
-      errEl.textContent = '請填寫角色名跟人數';
-      errEl.style.display = 'block';
-      return;
-    }
-    var s = slots[selectedSlotId];
-    if(!s){
-      errEl.textContent = '這個時段已經不存在了，請重新選擇';
-      errEl.style.display = 'block';
-      return;
-    }
-
-    // re-check capacity right before writing to reduce race conditions
-    reservationsRef.once('value').then(function(snap){
-      var current = snap.val() || {};
-      var count = Object.keys(current).filter(function(id){ return current[id].slotId === selectedSlotId; }).length;
-      if(count >= s.capacity){
-        errEl.textContent = '不好意思，這個時段剛好被預約滿了，請選別的時段';
-        errEl.style.display = 'block';
-        renderSlots();
-        return;
-      }
-      var id = reservationsRef.push().key;
-      reservationsRef.child(id).set({
-        slotId: selectedSlotId,
-        name: name,
-        size: size,
-        note: note,
-        createdAt: Date.now()
-      });
-      sendDiscordNotification('新的預約通知\n'+s.date+' '+s.time+' ｜ '+name+' ｜ '+size+'位'+(note?' ｜ '+note:''));
-      document.getElementById('bookName').value = '';
-      document.getElementById('bookSizeInput').value = '';
-      document.getElementById('bookNote').value = '';
-      document.getElementById('bookingForm').style.display = 'none';
-      errEl.style.display = 'none';
-      selectedSlotId = null;
-    });
-  });
-
-  document.getElementById('saveRules').addEventListener('click', function(){
-    if(!isConfigured) return;
-    rulesRef.set(document.getElementById('rulesEditor').value);
-  });
-
-  document.getElementById('hideRules').addEventListener('click', function(){
-    if(!isConfigured) return;
-    rulesRef.set('');
-    document.getElementById('rulesEditor').value = '';
-  });
 
   document.getElementById('addStaff').addEventListener('click', function(){
     if(!isConfigured) return;
@@ -688,36 +418,266 @@ input:focus{outline:none;border-color:var(--gold-dim);}
     var checked = document.querySelectorAll('#staffCheckList input[type=checkbox]:checked');
     var ids = Array.prototype.map.call(checked, function(cb){ return cb.getAttribute('data-staff-id'); });
     var dateInput = document.getElementById('onDutyDate').value.trim();
-    var targetDate = dateInput || todayKey();
-    todayStaffRef.set({ date: targetDate, staffIds: ids });
+    todayStaffRef.set({ date: dateInput || todayKey(), staffIds: ids });
   });
 
-  document.getElementById('addSlot').addEventListener('click', function(){
+  // ---------- setlist (used for song picking during booking) ----------
+  function renderBookingSetlistChips(){
+    var el = document.getElementById('bookingSetlistChips');
+    var keys = Object.keys(setlist);
+    if(keys.length===0){
+      el.innerHTML = '<span style="color:var(--parchment-dim);font-size:12px;">目前沒有預設曲目，可自行輸入</span>';
+      return;
+    }
+    var full = selectedSongs.length >= 3;
+    var html = '';
+    keys.forEach(function(k){
+      var s = setlist[k];
+      var already = selectedSongs.some(function(sel){ return sel.source==='setlist' && sel.key===k; });
+      var disabled = full || already;
+      html += '<span class="chip '+(disabled?'disabled':'')+'" data-key="'+k+'">'+escapeHtml(s.title)+(s.artist?' <span class="artist">· '+escapeHtml(s.artist)+'</span>':'')+'</span>';
+    });
+    el.innerHTML = html;
+    el.querySelectorAll('.chip:not(.disabled)').forEach(function(chip){
+      chip.addEventListener('click', function(){
+        var k = chip.getAttribute('data-key');
+        var s = setlist[k];
+        addSelectedSong({ title: s.title, url: '', source: 'setlist', key: k });
+      });
+    });
+  }
+
+  function renderSetlistManageList(){
+    var el = document.getElementById('setlistManageList');
+    var keys = Object.keys(setlist);
+    if(keys.length===0){ el.innerHTML = '<span style="color:var(--parchment-dim);font-size:12px;">尚無曲目</span>'; return; }
+    var html = '<div style="display:flex;flex-direction:column;gap:6px;">';
+    keys.forEach(function(k){
+      var s = setlist[k];
+      html += '<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:6px;">'
+        + '<span>'+escapeHtml(s.title)+(s.artist?' <span style="color:var(--parchment-dim);font-size:11px;">· '+escapeHtml(s.artist)+'</span>':'')+'</span>'
+        + '<button class="icon-btn" data-remove-song="'+k+'" title="刪除">✕</button>'
+        + '</div>';
+    });
+    html += '</div>';
+    el.innerHTML = html;
+    el.querySelectorAll('[data-remove-song]').forEach(function(btn){
+      btn.addEventListener('click', function(){ setlistRef.child(btn.getAttribute('data-remove-song')).remove(); });
+    });
+  }
+
+  document.getElementById('addSetlistSong').addEventListener('click', function(){
     if(!isConfigured) return;
-    var date = document.getElementById('slotDate').value.trim();
-    var time = document.getElementById('slotTime').value.trim();
-    var capacity = parseInt(document.getElementById('slotCapacity').value, 10);
-    if(!date || !time || !capacity || capacity < 1) return;
-    var key = slotsRef.push().key;
-    slotsRef.child(key).set({ date: date, time: time, capacity: capacity });
-    document.getElementById('slotDate').value = '';
-    document.getElementById('slotTime').value = '';
-    document.getElementById('slotCapacity').value = '';
+    var title = document.getElementById('newSongTitle').value.trim();
+    var artist = document.getElementById('newSongArtist').value.trim();
+    if(!title) return;
+    var key = setlistRef.push().key;
+    setlistRef.child(key).set({ title: title, artist: artist });
+    document.getElementById('newSongTitle').value = '';
+    document.getElementById('newSongArtist').value = '';
   });
 
-  document.getElementById('djToggle').addEventListener('click', function(){
-    var body = document.getElementById('djBody');
-    var open = body.classList.toggle('open');
-    document.getElementById('djChevron').textContent = open ? '▴' : '▾';
+  // ---------- song selection (max 3) ----------
+  function addSelectedSong(song){
+    if(selectedSongs.length >= 3) return;
+    selectedSongs.push(song);
+    renderSelectedSongs();
+    renderBookingSetlistChips();
+  }
+  function removeSelectedSong(index){
+    selectedSongs.splice(index,1);
+    renderSelectedSongs();
+    renderBookingSetlistChips();
+  }
+  function renderSelectedSongs(){
+    var el = document.getElementById('selectedSongsList');
+    if(selectedSongs.length===0){ el.innerHTML = '<span style="font-size:12px;color:var(--parchment-dim);">尚未選擇歌曲（最多3首）</span>'; return; }
+    var html = '';
+    selectedSongs.forEach(function(s, i){
+      html += '<div class="selected-song"><span>'+escapeHtml(s.title)+(s.url?' <a href="'+escapeHtml(s.url)+'" target="_blank" rel="noopener" style="color:var(--gold);font-size:11px;">原曲連結</a>':'')+'</span>'
+        + '<button class="icon-btn" data-remove-selected="'+i+'">✕</button></div>';
+    });
+    el.innerHTML = html;
+    el.querySelectorAll('[data-remove-selected]').forEach(function(btn){
+      btn.addEventListener('click', function(){ removeSelectedSong(parseInt(btn.getAttribute('data-remove-selected'),10)); });
+    });
+  }
+
+  document.getElementById('addCustomSong').addEventListener('click', function(){
+    var title = document.getElementById('customSongTitle').value.trim();
+    var url = document.getElementById('customSongUrl').value.trim();
+    var errEl = document.getElementById('bookingError');
+    if(!title || !url){
+      errEl.textContent = '自行輸入的歌曲需要填歌名跟原曲網址';
+      errEl.style.display = 'block';
+      return;
+    }
+    if(selectedSongs.length >= 3){
+      errEl.textContent = '最多只能選3首歌';
+      errEl.style.display = 'block';
+      return;
+    }
+    errEl.style.display = 'none';
+    addSelectedSong({ title: title, url: url, source: 'custom' });
+    document.getElementById('customSongTitle').value = '';
+    document.getElementById('customSongUrl').value = '';
   });
 
-  var unlockTaps = 0;
-  var unlockTimer = null;
+  // ---------- date list (customer facing) ----------
+  function renderDateList(){
+    var el = document.getElementById('dateList');
+    var reservedDates = {};
+    Object.keys(reservations).forEach(function(id){ reservedDates[reservations[id].date] = true; });
+    var available = Object.keys(openDates).filter(function(d){ return !reservedDates[d]; }).sort();
+    if(available.length===0){
+      el.innerHTML = '<span style="color:var(--parchment-dim);font-size:12px;">目前沒有開放的預約日期</span>';
+      return;
+    }
+    var html = '';
+    available.forEach(function(d){
+      html += '<span class="chip" data-date="'+d+'">'+d+'</span>';
+    });
+    el.innerHTML = html;
+    el.querySelectorAll('.chip').forEach(function(chip){
+      chip.addEventListener('click', function(){
+        selectedDate = chip.getAttribute('data-date');
+        selectedSongs = [];
+        document.getElementById('selectedDateLabel').textContent = selectedDate;
+        document.getElementById('bookingForm').style.display = 'block';
+        document.getElementById('bookingError').style.display = 'none';
+        renderSelectedSongs();
+        renderBookingSetlistChips();
+        document.getElementById('bookingForm').scrollIntoView({behavior:'smooth', block:'center'});
+      });
+    });
+  }
+
+  document.getElementById('cancelBookingForm').addEventListener('click', function(){
+    document.getElementById('bookingForm').style.display = 'none';
+    selectedDate = null;
+    selectedSongs = [];
+  });
+
+  document.getElementById('submitBooking').addEventListener('click', function(){
+    if(!isConfigured || !selectedDate) return;
+    var name = document.getElementById('bookName').value.trim();
+    var size = parseInt(document.getElementById('bookSizeInput').value, 10);
+    var note = document.getElementById('bookNote').value.trim();
+    var errEl = document.getElementById('bookingError');
+    if(!name || !size || size < 1){
+      errEl.textContent = '請填寫角色名跟人數';
+      errEl.style.display = 'block';
+      return;
+    }
+    reservationsRef.once('value').then(function(snap){
+      var current = snap.val() || {};
+      var taken = Object.keys(current).some(function(id){ return current[id].date === selectedDate; });
+      if(taken){
+        errEl.textContent = '不好意思，這個日期剛好被別人預約走了，請選別的日期';
+        errEl.style.display = 'block';
+        selectedDate = null;
+        document.getElementById('bookingForm').style.display = 'none';
+        return;
+      }
+      var id = reservationsRef.push().key;
+      reservationsRef.child(id).set({
+        date: selectedDate,
+        name: name,
+        size: size,
+        note: note,
+        songs: selectedSongs,
+        createdAt: Date.now()
+      });
+      var songLines = selectedSongs.length ? selectedSongs.map(function(s){ return '・'+s.title; }).join('\n') : '（未選歌曲）';
+      sendDiscordNotification('新的預約通知\n'+selectedDate+' ｜ '+name+' ｜ '+size+'位'+(note?' ｜ '+note:'')+'\n點歌：\n'+songLines);
+      document.getElementById('bookName').value = '';
+      document.getElementById('bookSizeInput').value = '';
+      document.getElementById('bookNote').value = '';
+      document.getElementById('bookingForm').style.display = 'none';
+      errEl.style.display = 'none';
+      selectedDate = null;
+      selectedSongs = [];
+    });
+  });
+
+  function sendDiscordNotification(text){
+    if(!webhookUrl) return;
+    fetch(webhookUrl, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({content: text})
+    }).catch(function(){});
+  }
+
+  // ---------- admin: open dates ----------
+  function renderOpenDateManageList(){
+    var el = document.getElementById('openDateManageList');
+    var keys = Object.keys(openDates).sort();
+    if(keys.length===0){ el.innerHTML = '<span style="color:var(--parchment-dim);font-size:12px;">尚未開放任何日期</span>'; return; }
+    var reservedDates = {};
+    Object.keys(reservations).forEach(function(id){ reservedDates[reservations[id].date] = true; });
+    var html = '<div style="display:flex;flex-direction:column;gap:6px;">';
+    keys.forEach(function(d){
+      html += '<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:6px;">'
+        + '<span>'+d+(reservedDates[d]?' <span style="color:var(--rose);font-size:11px;">已被預約</span>':' <span style="color:var(--sage);font-size:11px;">可預約</span>')+'</span>'
+        + '<button class="icon-btn" data-remove-date="'+d+'" title="取消開放">✕</button>'
+        + '</div>';
+    });
+    html += '</div>';
+    el.innerHTML = html;
+    el.querySelectorAll('[data-remove-date]').forEach(function(btn){
+      btn.addEventListener('click', function(){ openDatesRef.child(btn.getAttribute('data-remove-date')).remove(); });
+    });
+  }
+
+  document.getElementById('addOpenDate').addEventListener('click', function(){
+    if(!isConfigured) return;
+    var date = document.getElementById('newOpenDate').value.trim();
+    if(!date) return;
+    openDatesRef.child(date).set(true);
+    document.getElementById('newOpenDate').value = '';
+  });
+
+  function renderAdminReservations(){
+    var el = document.getElementById('adminReservationList');
+    var keys = Object.keys(reservations);
+    if(keys.length===0){ el.innerHTML = '尚無預約'; return; }
+    var arr = keys.map(function(id){ var r=reservations[id]; r.id=id; return r; });
+    arr.sort(function(a,b){ return a.date.localeCompare(b.date); });
+    var html = '<div style="display:flex;flex-direction:column;gap:8px;">';
+    arr.forEach(function(r){
+      var songs = (r.songs||[]).map(function(s){ return s.title; }).join('、') || '（未選歌曲）';
+      html += '<div style="border-bottom:1px solid var(--line);padding-bottom:8px;">'
+        + '<div style="display:flex;justify-content:space-between;align-items:center;">'
+        + '<span>'+r.date+' · '+escapeHtml(r.name)+' · '+r.size+'位'+(r.note?' · '+escapeHtml(r.note):'')+'</span>'
+        + '<button class="icon-btn" data-cancel="'+r.id+'" title="取消預約">✕</button>'
+        + '</div>'
+        + '<div style="font-size:11.5px;color:var(--parchment-dim);margin-top:3px;">點歌：'+escapeHtml(songs)+'</div>'
+        + '</div>';
+    });
+    html += '</div>';
+    el.innerHTML = html;
+    el.querySelectorAll('[data-cancel]').forEach(function(btn){
+      btn.addEventListener('click', function(){ reservationsRef.child(btn.getAttribute('data-cancel')).remove(); });
+    });
+  }
+
+  // ---------- rules ----------
+  document.getElementById('saveRules').addEventListener('click', function(){
+    if(!isConfigured) return;
+    rulesRef.set(document.getElementById('rulesEditor').value);
+  });
+  document.getElementById('hideRules').addEventListener('click', function(){
+    if(!isConfigured) return;
+    rulesRef.set('');
+    document.getElementById('rulesEditor').value = '';
+  });
+
+  // ---------- admin login ----------
   document.getElementById('djLoginToggle').addEventListener('click', function(){
     var body = document.getElementById('djLoginBody');
     body.style.display = body.style.display === 'none' ? 'block' : 'none';
   });
-
   document.getElementById('adminLoginBtn').addEventListener('click', function(){
     if(!isConfigured) return;
     var email = document.getElementById('adminEmail').value.trim();
@@ -729,9 +689,12 @@ input:focus{outline:none;border-color:var(--gold-dim);}
       document.getElementById('loginError').style.display = 'block';
     });
   });
+  document.getElementById('adminLogoutBtn').addEventListener('click', function(){ firebase.auth().signOut(); });
 
-  document.getElementById('adminLogoutBtn').addEventListener('click', function(){
-    firebase.auth().signOut();
+  document.getElementById('djToggle').addEventListener('click', function(){
+    var body = document.getElementById('djBody');
+    var open = body.classList.toggle('open');
+    document.getElementById('djChevron').textContent = open ? '▴' : '▾';
   });
 
   if(isConfigured){
@@ -748,25 +711,7 @@ input:focus{outline:none;border-color:var(--gold-dim);}
     });
   }
 
-  document.getElementById('addSetlistSong').addEventListener('click', function(){
-    if(!isConfigured) return;
-    var title = document.getElementById('newSongTitle').value.trim();
-    var artist = document.getElementById('newSongArtist').value.trim();
-    if(!title) return;
-    var key = setlistRef.push().key;
-    setlistRef.child(key).set({ title: title, artist: artist });
-    document.getElementById('newSongTitle').value = '';
-    document.getElementById('newSongArtist').value = '';
-  });
-
-  document.getElementById('clearRequests').addEventListener('click', function(){
-    if(!isConfigured) return;
-    if(confirm('確定要清空目前的點歌紀錄嗎？這個動作無法復原。')){
-      requestsRef.remove();
-    }
-  });
-
-  renderRequests();
+  renderSelectedSongs();
 })();
 </script>
 
