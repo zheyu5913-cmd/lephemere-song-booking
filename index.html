@@ -227,7 +227,7 @@ input:focus{outline:none;border-color:var(--gold-dim);}
       <input type="text" id="onDutyDate" placeholder="日期 YYYY-MM-DD" style="min-width:130px;">
     </div>
     <button class="btn primary" id="updateTodayStaff">更新在班名單</button>
-    <p style="font-size:11.5px;color:var(--parchment-dim);margin:8px 0 0;">日期預設是今天，也可以改成其他日期（例如提前排明天的班）。只有等系統時間走到該日期，客人端才會顯示這份名單；不是那一天的話會自動隱藏。</p>
+    <p style="font-size:11.5px;color:var(--parchment-dim);margin:8px 0 0;">這份名單會持續顯示給客人看，直到你下次更新為止（不會因為日期不同而自動隱藏）。日期欄位只是方便你自己記錄，記得每天營業前更新一次，確保客人看到的是當天正確的在班名單。</p>
 
     <p class="admin-section-label" style="margin-top:26px;">♪ 點歌管理</p>
     <p class="panel-title">新增曲目到清單</p>
@@ -329,7 +329,7 @@ input:focus{outline:none;border-color:var(--gold-dim);}
       el.innerHTML = '尚未建立店員名單';
       return;
     }
-    var currentOnDuty = (todayStaff.date === todayKey()) ? (todayStaff.staffIds || []) : [];
+    var currentOnDuty = todayStaff.staffIds || [];
     var html = '';
     keys.forEach(function(k){
       var s = staffRoster[k];
@@ -350,7 +350,7 @@ input:focus{outline:none;border-color:var(--gold-dim);}
   function renderTodayStaff(){
     var panel = document.getElementById('todayStaffPanel');
     var el = document.getElementById('todayStaffContent');
-    if(todayStaff.date !== todayKey() || !todayStaff.staffIds || todayStaff.staffIds.length===0){
+    if(!todayStaff.staffIds || todayStaff.staffIds.length===0){
       panel.style.display = 'none';
       return;
     }
