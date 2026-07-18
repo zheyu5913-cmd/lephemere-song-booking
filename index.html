@@ -104,6 +104,31 @@ input:focus{outline:none;border-color:var(--gold-dim);}
   border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-bottom:6px;
 }
 .staff-check label{flex:1;font-size:13px;cursor:pointer;}
+.staff-check-photo{
+  width:32px;height:32px;border-radius:50%;flex:none;overflow:hidden;
+  background:var(--ink);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--parchment-dim);
+}
+.staff-check-photo img{width:100%;height:100%;object-fit:cover;}
+
+.photo-modal-overlay{
+  display:none;position:fixed;inset:0;background:rgba(10,8,16,0.72);z-index:200;
+  align-items:center;justify-content:center;padding:20px;
+}
+.photo-modal-overlay.open{display:flex;}
+.photo-modal{
+  background:var(--ink);border:1px solid var(--gold-soft);border-radius:12px;
+  padding:20px;max-width:340px;width:100%;
+}
+.photo-modal h4{font-family:'Noto Serif TC',serif;color:var(--gold);font-size:14px;margin-bottom:12px;}
+.photo-crop-stage{
+  width:260px;height:260px;margin:0 auto 12px;border-radius:50%;overflow:hidden;
+  background:var(--ink-deep);cursor:grab;position:relative;border:1px solid var(--line);
+}
+.photo-crop-stage:active{cursor:grabbing;}
+.photo-crop-stage canvas{display:block;}
+.photo-modal input[type=range]{width:100%;margin:6px 0 14px;}
+.photo-modal-actions{display:flex;gap:8px;justify-content:flex-end;}
 
 .setup-toggle{font-size:12px;color:var(--mist);cursor:pointer;display:flex;align-items:center;gap:6px;margin-bottom:14px;position:relative;z-index:1;}
 .setup-body{display:none;}
@@ -253,6 +278,22 @@ textarea{width:100%;min-height:110px;background:var(--ink-deep);border:1px solid
     <div id="adminReservationList" style="font-size:12.5px;">尚無預約</div>
   </div>
 
+</div>
+
+<div class="photo-modal-overlay" id="photoModalOverlay">
+  <div class="photo-modal">
+    <h4>設定店員頭貼</h4>
+    <div class="photo-crop-stage" id="photoCropStage">
+      <canvas id="photoCropCanvas" width="260" height="260"></canvas>
+    </div>
+    <input type="file" id="photoFileInput" accept="image/*" style="font-size:12px;margin-bottom:8px;width:100%;">
+    <input type="range" id="photoZoomSlider" min="100" max="400" value="100">
+    <p style="font-size:11px;color:var(--parchment-dim);margin:-8px 0 12px;">選好照片後，拖曳可移動位置，滑桿可縮放</p>
+    <div class="photo-modal-actions">
+      <button class="btn ghost" id="photoModalCancel">取消</button>
+      <button class="btn primary" id="photoModalSave">儲存頭貼</button>
+    </div>
+  </div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
@@ -425,8 +466,11 @@ textarea{width:100%;min-height:110px;background:var(--ink-deep);border:1px solid
     keys.forEach(function(k){
       var s = staffRoster[k];
       var checked = currentOnDuty.indexOf(k) > -1 ? 'checked' : '';
+      var photoInner = s.photo ? '<img src="'+s.photo+'" alt="">' : '';
       html += '<div class="staff-check"><input type="checkbox" data-staff-id="'+k+'" '+checked+'>'
+        + '<div class="staff-check-photo">'+photoInner+'</div>'
         + '<label>'+escapeHtml(s.name)+' <span style="color:var(--parchment-dim);font-size:11px;">· '+escapeHtml(s.role||'')+'</span></label>'
+        + '<button class="icon-btn" data-photo-staff="'+k+'" title="設定頭貼">📷</button>'
         + '<button class="icon-btn" data-remove-staff="'+k+'" title="從名單刪除">✕</button>'
         + '</div>';
     });
@@ -434,7 +478,119 @@ textarea{width:100%;min-height:110px;background:var(--ink-deep);border:1px solid
     el.querySelectorAll('[data-remove-staff]').forEach(function(btn){
       btn.addEventListener('click', function(){ staffRosterRef.child(btn.getAttribute('data-remove-staff')).remove(); });
     });
+    el.querySelectorAll('[data-photo-staff]').forEach(function(btn){
+      btn.addEventListener('click', function(){ openPhotoEditor(btn.getAttribute('data-photo-staff')); });
+    });
   }
+
+  // ---------- photo cropper ----------
+  var photoEditStaffId = null;
+  var photoImg = null;
+  var photoScale = 1, photoBaseScale = 1, photoOffX = 0, photoOffY = 0;
+  var photoDragging = false, photoDragStartX = 0, photoDragStartY = 0, photoStartOffX = 0, photoStartOffY = 0;
+  var photoCanvas = document.getElementById('photoCropCanvas');
+  var photoCtx = photoCanvas ? photoCanvas.getContext('2d') : null;
+
+  function openPhotoEditor(staffId){
+    photoEditStaffId = staffId;
+    photoImg = null;
+    document.getElementById('photoFileInput').value = '';
+    document.getElementById('photoZoomSlider').value = 100;
+    if(photoCtx) photoCtx.clearRect(0,0,260,260);
+    var existing = staffRoster[staffId] && staffRoster[staffId].photo;
+    if(existing){
+      var im = new Image();
+      im.onload = function(){ photoImg = im; fitPhotoToStage(); drawPhotoCanvas(); };
+      im.src = existing;
+    }
+    document.getElementById('photoModalOverlay').classList.add('open');
+  }
+  function closePhotoEditor(){
+    document.getElementById('photoModalOverlay').classList.remove('open');
+    photoEditStaffId = null;
+    photoImg = null;
+  }
+  function fitPhotoToStage(){
+    if(!photoImg) return;
+    photoBaseScale = Math.max(260/photoImg.width, 260/photoImg.height);
+    photoScale = 1;
+    photoOffX = 0; photoOffY = 0;
+    document.getElementById('photoZoomSlider').value = 100;
+  }
+  function drawPhotoCanvas(){
+    if(!photoCtx) return;
+    photoCtx.clearRect(0,0,260,260);
+    if(!photoImg) return;
+    var s = photoBaseScale * photoScale;
+    var w = photoImg.width * s, h = photoImg.height * s;
+    var x = (260 - w)/2 + photoOffX;
+    var y = (260 - h)/2 + photoOffY;
+    photoCtx.drawImage(photoImg, x, y, w, h);
+  }
+  var fileInputEl = document.getElementById('photoFileInput');
+  if(fileInputEl) fileInputEl.addEventListener('change', function(e){
+    var file = e.target.files && e.target.files[0];
+    if(!file) return;
+    var reader = new FileReader();
+    reader.onload = function(ev){
+      var im = new Image();
+      im.onload = function(){ photoImg = im; fitPhotoToStage(); drawPhotoCanvas(); };
+      im.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+  var zoomSliderEl = document.getElementById('photoZoomSlider');
+  if(zoomSliderEl) zoomSliderEl.addEventListener('input', function(e){
+    photoScale = e.target.value / 100;
+    drawPhotoCanvas();
+  });
+  var stageEl = document.getElementById('photoCropStage');
+  if(stageEl){
+    stageEl.addEventListener('mousedown', function(e){
+      if(!photoImg) return;
+      photoDragging = true;
+      photoDragStartX = e.clientX; photoDragStartY = e.clientY;
+      photoStartOffX = photoOffX; photoStartOffY = photoOffY;
+    });
+    window.addEventListener('mousemove', function(e){
+      if(!photoDragging) return;
+      photoOffX = photoStartOffX + (e.clientX - photoDragStartX);
+      photoOffY = photoStartOffY + (e.clientY - photoDragStartY);
+      drawPhotoCanvas();
+    });
+    window.addEventListener('mouseup', function(){ photoDragging = false; });
+    stageEl.addEventListener('touchstart', function(e){
+      if(!photoImg || !e.touches[0]) return;
+      photoDragging = true;
+      photoDragStartX = e.touches[0].clientX; photoDragStartY = e.touches[0].clientY;
+      photoStartOffX = photoOffX; photoStartOffY = photoOffY;
+    });
+    stageEl.addEventListener('touchmove', function(e){
+      if(!photoDragging || !e.touches[0]) return;
+      photoOffX = photoStartOffX + (e.touches[0].clientX - photoDragStartX);
+      photoOffY = photoStartOffY + (e.touches[0].clientY - photoDragStartY);
+      drawPhotoCanvas();
+      e.preventDefault();
+    }, {passive:false});
+    stageEl.addEventListener('touchend', function(){ photoDragging = false; });
+  }
+  var cancelBtn = document.getElementById('photoModalCancel');
+  if(cancelBtn) cancelBtn.addEventListener('click', closePhotoEditor);
+  var saveBtn = document.getElementById('photoModalSave');
+  if(saveBtn) saveBtn.addEventListener('click', function(){
+    if(!photoEditStaffId || !photoImg){ closePhotoEditor(); return; }
+    var out = document.createElement('canvas');
+    out.width = 300; out.height = 300;
+    var octx = out.getContext('2d');
+    var s = photoBaseScale * photoScale * (300/260);
+    var w = photoImg.width * s, h = photoImg.height * s;
+    var x = (300 - w)/2 + photoOffX * (300/260);
+    var y = (300 - h)/2 + photoOffY * (300/260);
+    octx.drawImage(photoImg, x, y, w, h);
+    var dataUrl = out.toDataURL('image/webp', 0.85);
+    staffRosterRef.child(photoEditStaffId).child('photo').set(dataUrl);
+    closePhotoEditor();
+  });
 
   function renderTodayStaff(){
     var panel = document.getElementById('todayStaffPanel');
